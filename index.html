@@ -689,11 +689,7 @@
   function toKg(v) { return weightUnit === 'lbs' ? v * 0.453592 : v; }
   function toCm(v) { return heightUnit === 'in'  ? v * 2.54     : v; }
 
-  function bmrMifflin(w, h, a, m) { const b = 10*w + 6.25*h - 5*a; return m ? b+5 : b-161; }
-  function bmrHarris(w, h, a, m)  { return m ? 88.362+13.397*w+4.799*h-5.677*a : 447.593+9.247*w+3.098*h-4.330*a; }
-  function bmrKatch(w, bf)         { return 370 + 21.6 * (w * (1 - bf/100)); }
-
-  function calculate() {
+  async function calculate() {
     const wR = parseFloat(document.getElementById('weightInput').value);
     const hR = parseFloat(document.getElementById('heightInput').value);
     const age = parseFloat(document.getElementById('ageInput').value);
@@ -707,43 +703,68 @@
     const actBtn = document.querySelector('.act-btn.active');
     const mult = actBtn ? parseFloat(actBtn.dataset.val) : 1.2;
 
-    const mifflin = bmrMifflin(wKg, hCm, age, male);
-    const harris  = bmrHarris(wKg, hCm, age, male);
-    const katch   = bmrKatch(wKg, bf);
-    const bmrMap  = { mifflin, harris, katch };
-    const tdee    = bmrMap[method] * mult;
+    // Map values to server expectations
+    const sexCode = male ? 1 : 2;
+    const goalCode = goal === 'fatloss' ? 1 : (goal === 'maintenance' ? 2 : 3);
+    const deficitCode = deficit === 'aggressive' ? 1 : 2;
+    const trainingDays = parseInt(document.getElementById('trainingDays').value) || 0;
+    const methodCode = method === 'mifflin' ? 1 : (method === 'harris' ? 2 : 3);
 
-    let cal, def;
-    if (goal === 'fatloss')    { def = deficit === 'aggressive' ? 500 : 250; cal = tdee - def; }
-    else if (goal === 'musclegain') { def = -200; cal = tdee + 200; }
-    else                        { def = 0; cal = tdee; }
+    const payload = {
+      weight_kg: wKg,
+      height_cm: hCm,
+      age: age,
+      sex: sexCode,
+      bodyfat: bf,
+      training_days: trainingDays,
+      goal: goalCode,
+      activity_multiplier: mult,
+      deficit: deficitCode
+    };
 
-    const protein = +(wKg * 1.4).toFixed(1);
-    const fat     = +(cal * 0.30 / 9).toFixed(1);
-    const carbs   = +((cal - protein*4 - fat*9) / 4).toFixed(1);
+    try {
+      const response = await fetch('/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    document.getElementById('bmrRows').innerHTML = [
-      { name: 'Mifflin (St Jeor)', key: 'mifflin', val: mifflin },
-      { name: 'Harris (Benedict)', key: 'harris',  val: harris  },
-      { name: 'Katch (McArdle)',   key: 'katch',   val: katch   },
-    ].map(r => `<tr class="${r.key===method?'ar':''}"><td class="mc">${r.name}${r.key===method?' ◀':''}</td><td class="vc">${r.val.toFixed(1)}</td></tr>`).join('');
+      if (!response.ok) {
+        const errorData = await response.json();
+        err.textContent = '⚠ ' + (errorData.error || 'Server error');
+        err.style.display = 'block';
+        return;
+      }
 
-    document.getElementById('tdeeDisplay').textContent = Math.round(tdee) + ' kcal';
-    document.getElementById('rCalories').textContent   = Math.round(cal);
-    document.getElementById('rProtein').textContent    = protein;
-    document.getElementById('rFat').textContent        = fat;
-    document.getElementById('rCarbs').textContent      = carbs > 0 ? carbs : 0;
+      const data = await response.json();
 
-    const badge = document.getElementById('rDeficit');
-    if (goal === 'fatloss')         { badge.textContent = '−'+def+' kcal deficit'; badge.style.display=''; }
-    else if (goal === 'musclegain') { badge.textContent = '+200 kcal surplus';      badge.style.display=''; }
-    else                            { badge.style.display = 'none'; }
+      // Display results
+      document.getElementById('bmrRows').innerHTML = [
+        { name: 'Mifflin (St Jeor)', key: 'mifflin', val: data.mifflin },
+        { name: 'Harris (Benedict)', key: 'harris',  val: data.harris  },
+        { name: 'Katch (McArdle)',   key: 'katch',   val: data.katch   },
+      ].map(r => `<tr class="${methodCode===1&&r.key==='mifflin'||methodCode===2&&r.key==='harris'||methodCode===3&&r.key==='katch'?'ar':''}"><td class="mc">${r.name}${methodCode===1&&r.key==='mifflin'||methodCode===2&&r.key==='harris'||methodCode===3&&r.key==='katch'?' ◀':''}</td><td class="vc">${r.val.toFixed(1)}</td></tr>`).join('');
 
-    const res = document.getElementById('results');
-    res.classList.remove('visible');
-    void res.offsetWidth;
-    res.classList.add('visible');
-    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('tdeeDisplay').textContent = Math.round(data.tdee) + ' kcal';
+      document.getElementById('rCalories').textContent   = Math.round(data.calories);
+      document.getElementById('rProtein').textContent    = data.protein;
+      document.getElementById('rFat').textContent        = data.fat;
+      document.getElementById('rCarbs').textContent      = data.carbs > 0 ? data.carbs : 0;
+
+      const badge = document.getElementById('rDeficit');
+      if (goal === 'fatloss')         { badge.textContent = '−'+data.deficit+' kcal deficit'; badge.style.display=''; }
+      else if (goal === 'musclegain') { badge.textContent = '+200 kcal surplus';      badge.style.display=''; }
+      else                            { badge.style.display = 'none'; }
+
+      const res = document.getElementById('results');
+      res.classList.remove('visible');
+      void res.offsetWidth;
+      res.classList.add('visible');
+      res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+      err.textContent = '⚠ Network error: ' + error.message;
+      err.style.display = 'block';
+    }
   }
 </script>
 </body>
