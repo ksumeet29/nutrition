@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Macros Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h1>Macros Calculator</h1>
+    <p class="subtitle">Enter your physical metrics to get your BMR, TDEE and daily macros.</p>
+
+    <form action="{{ url_for('result') }}" method="post" class="form-grid">
+      <label>
+        Weight (kg)
+        <input type="number" step="0.1" name="weight" value="80" min="1" required>
+      </label>
+
+      <label>
+        Height (cm)
+        <input type="number" step="0.1" name="height" value="178" min="1" required>
+      </label>
+
+      <label>
+        Age
+        <input type="number" name="age" value="27" min="1" required>
+      </label>
+
+      <label>
+        Sex
+        <select name="sex">
+          <option value="1">Male</option>
+          <option value="2">Female</option>
+        </select>
+      </label>
+
+      <label>
+        Body Fat (%)
+        <input type="number" step="0.1" name="bodyfat" value="20" min="1" max="70" required>
+      </label>
+
+      <label>
+        Training Days / Week
+        <input type="number" name="trainingdays" value="3" min="0" max="7" required>
+      </label>
+
+      <label>
+        Goal
+        <select name="goal">
+          <option value="1">Fat Loss</option>
+          <option value="2">Maintenance</option>
+          <option value="3">Muscle Gain</option>
+        </select>
+      </label>
+
+      <label>
+        Activity Level
+        <select name="mul">
+          <option value="1.2">Sedentary — little/no exercise (&times;1.2)</option>
+          <option value="1.375">Lightly Active — 1-3 days/week (&times;1.375)</option>
+          <option value="1.55">Moderately Active — 3-5 days/week (&times;1.55)</option>
+          <option value="1.725">Very Active — 6-7 days/week (&times;1.725)</option>
+          <option value="1.9">Extra Active — hard daily training/physical job (&times;1.9)</option>
+        </select>
+      </label>
+
+      <label>
+        Deficit
+        <select name="deficit">
+          <option value="1">Aggressive (500 kCal)</option>
+          <option value="2">Moderate (250 kCal)</option>
+        </select>
+      </label>
+
+      <button type="submit" class="submit-btn">Calculate</button>
+    </form>
+  </div>
+</body>
+</html>

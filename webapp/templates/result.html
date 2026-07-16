@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Results - Nutrition Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    {% if error %}
+      <h1>Something went wrong</h1>
+      <p class="error-box">{{ error }}</p>
+      <a class="back-link" href="{{ url_for('index') }}">&larr; Back to form</a>
+    {% else %}
+      <h1>Your Results</h1>
+
+      <h2>Basal Metabolic Rate (BMR)</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <span class="label">Mifflin-St Jeor</span>
+          <span class="value">{{ data.mifflin }} kcal</span>
+        </div>
+        <div class="result-item">
+          <span class="label">Harris-Benedict</span>
+          <span class="value">{{ data.harris }} kcal</span>
+        </div>
+        <div class="result-item">
+          <span class="label">Katch-McArdle</span>
+          <span class="value">{{ data.katch }} kcal</span>
+        </div>
+      </div>
+
+      <h2>Daily Energy &amp; Macros</h2>
+      <div class="result-grid">
+        <div class="result-item highlight">
+          <span class="label">TDEE</span>
+          <span class="value">{{ data.tdee }} kcal</span>
+        </div>
+        <div class="result-item highlight">
+          <span class="label">Target Calories</span>
+          <span class="value">{{ data.calories }} kcal</span>
+        </div>
+        <div class="result-item">
+          <span class="label">Applied Deficit</span>
+          <span class="value">{{ data.deficit }} kcal</span>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item macro protein">
+          <span class="label">Protein</span>
+          <span class="value">{{ data.protein }} g</span>
+        </div>
+        <div class="result-item macro fat">
+          <span class="label">Fat</span>
+          <span class="value">{{ data.fat }} g</span>
+        </div>
+        <div class="result-item macro carbs">
+          <span class="label">Carbs</span>
+          <span class="value">{{ data.carbs }} g</span>
+        </div>
+      </div>
+
+      <a class="back-link" href="{{ url_for('index') }}">&larr; Recalculate</a>
+    {% endif %}
+  </div>
+</body>
+</html>

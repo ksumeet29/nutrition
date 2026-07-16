@@ -1,10 +1,18 @@
 load("@rules_cc//cc:defs.bzl", "cc_library","cc_binary")
 
 cc_library(
+    name = "models",
+    hdrs = ["include/models.hpp"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "macros",
     srcs = ["src/macros.cpp"],
     hdrs = ["include/macros.hpp"],
     includes = ["include"],
+    deps = [":models"],
     visibility = ["//visibility:public"],
 )
 
@@ -13,17 +21,19 @@ cc_library(
     srcs = ["src/utils.cpp"],
     hdrs = ["include/utils.hpp"],
     includes = ["include"],
+    deps = [":macros"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "tdee",
     srcs = ["src/tdee.cpp"],
-    hdrs = [
-                "include/macros.hpp",
-                "include/models.hpp",
-    ],
+    hdrs = ["include/tdee.hpp"],
     includes = ["include"],
+    deps = [
+        ":macros",
+        ":models",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -31,8 +41,8 @@ cc_binary(
     name = "main",
     srcs = ["src/main.cpp"],
     deps = [
-                ":macros",
-                ":utils",
-                ":tdee",
+        ":macros",
+        ":utils",
+        ":tdee",
     ],
 )
