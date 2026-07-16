@@ -14,22 +14,23 @@
     <form action="{{ url_for('result') }}" method="post" class="form-grid">
       <label>
         Weight (kg)
-        <input type="number" step="0.1" name="weight" value=" " min="1" required>
+        <input type="number" step="0.1" name="weight" value="" min="1" required>
       </label>
 
       <label>
         Height (cm)
-        <input type="number" step="0.1" name="height" value=" " min="1" required>
+        <input type="number" step="0.1" name="height" value="" min="1" required>
       </label>
 
       <label>
         Age
-        <input type="number" name="age" value=" " min="1" required>
+        <input type="number" name="age" value="" min="1" required>
       </label>
 
       <label>
         Sex
-        <select name="sex">
+        <select name="sex" required>
+          <option value="" selected disabled>Select sex</option>
           <option value="1">Male</option>
           <option value="2">Female</option>
         </select>
@@ -37,17 +38,18 @@
 
       <label>
         Body Fat (%)
-        <input type="number" step="0.1" name="bodyfat" value=" " min="1" max="70" required>
+        <input type="number" step="0.1" name="bodyfat" value="" min="1" max="70" required>
       </label>
 
       <label>
         Training Days / Week
-        <input type="number" name="trainingdays" value=" " min="0" max="7" required>
+        <input type="number" name="trainingdays" value="" min="0" max="7" required>
       </label>
 
       <label>
         Goal
-        <select name="goal">
+        <select name="goal" id="goal-select" required>
+          <option value="" selected disabled>Select goal</option>
           <option value="1">Fat Loss</option>
           <option value="2">Maintenance</option>
           <option value="3">Muscle Gain</option>
@@ -56,7 +58,8 @@
 
       <label>
         Activity Level
-        <select name="mul">
+        <select name="mul" required>
+          <option value="" selected disabled>Select activity level</option>
           <option value="1.2">Sedentary — little/no exercise (&times;1.2)</option>
           <option value="1.375">Lightly Active — 1-3 days/week (&times;1.375)</option>
           <option value="1.55">Moderately Active — 3-5 days/week (&times;1.55)</option>
@@ -65,16 +68,38 @@
         </select>
       </label>
 
-      <label>
-        Deficit
-        <select name="deficit">
-          <option value="1">Aggressive (500 kCal)</option>
-          <option value="2">Moderate (250 kCal)</option>
-        </select>
-      </label>
+      <div id="deficit-wrapper" style="display: none;">
+        <label>
+          Deficit
+          <select name="deficit">
+            <option value="" selected disabled>Select deficit</option>
+            <option value="1">Aggressive (500 kCal)</option>
+            <option value="2">Moderate (250 kCal)</option>
+          </select>
+        </label>
+      </div>
 
       <button type="submit" class="submit-btn">Calculate</button>
     </form>
   </div>
+
+  <script>
+    const goalSelect = document.getElementById('goal-select');
+    const deficitWrapper = document.getElementById('deficit-wrapper');
+
+    function toggleDeficitField() {
+      const show = goalSelect.value === '1';
+      deficitWrapper.style.display = show ? 'block' : 'none';
+      if (!show) {
+        const deficitSelect = deficitWrapper.querySelector('select');
+        deficitSelect.value = '';
+      }
+    }
+
+    if (goalSelect) {
+      goalSelect.addEventListener('change', toggleDeficitField);
+      toggleDeficitField();
+    }
+  </script>
 </body>
 </html>

@@ -56,7 +56,7 @@ def run_calculator(form):
         form["trainingdays"],
         form["goal"],
         form["mul"],
-        form["deficit"],
+        form.get("deficit", "2"),
     ]
     proc = subprocess.run(args, capture_output=True, text=True, check=True)
     return json.loads(proc.stdout)
