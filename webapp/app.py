@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flask front-end for the C++ nutrition calculator.
+"""Flask front-end for the C++ macros calculator.
 
 Renders an input form (index.html) and a results page (result.html),
 delegating the actual TDEE/macro calculation to the Bazel-built `main`
@@ -19,7 +19,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (used by the Docker image, which copies the binary to a fixed location)
 # and otherwise falls back to Bazel's default output path.
 MAIN_BINARY = os.environ.get(
-    "NUTRITION_BINARY", os.path.join(PROJECT_ROOT, "bazel-bin", "main")
+    "MACROS_BINARY", os.path.join(PROJECT_ROOT, "bazel-bin", "main")
 )
 
 GOAL_LABELS = {"1": "Fat Loss", "2": "Maintenance", "3": "Muscle Gain"}

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: nutrition-calculator
+    name: macros-calculator
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free

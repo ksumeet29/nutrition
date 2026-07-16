@@ -1,5 +1,8 @@
 # nutrition
-Calorie Calculation and other stuff
+Macros Calulator. Calculates Basal Metabollic Rate (BMR), Total Daily Energy Expenditure (TDEE), and Macros based on 3 accepted methods
+1. Mifflin-St Jeor
+2. Harris-Benedict
+3. Katch-McArdle
 
 ## Web app
 
@@ -8,22 +11,6 @@ Calorie Calculation and other stuff
 `static/style.css` for styling). It shells out to the Bazel-built `//:main`
 binary to run the C++ TDEE/macro calculation logic and renders the results
 in human-readable form.
-
-Local run:
-
-```bash
-bazel build -c opt //:main   # build the calculator binary once
-cd webapp
-pip install -r requirements.txt
-python3 app.py                # reads PORT env var, defaults to 5000
-```
-
-Then open `http://localhost:5000`, fill in the form, and submit to see
-your BMR (Mifflin-St Jeor, Harris-Benedict, Katch-McArdle), TDEE, target
-calories, and macro breakdown on the results page.
-
-`FLASK_DEBUG` defaults to `1` locally so edits to `app.py`/templates are
-picked up automatically; set `FLASK_DEBUG=0` for production.
 
 ## Deploying on Render.com
 
@@ -56,4 +43,3 @@ docker rm nutrition-web
 # Delete the image
 docker rmi nutrition-web
 ```
-

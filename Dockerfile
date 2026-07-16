@@ -36,7 +36,7 @@ COPY webapp/ ./
 COPY --from=builder /workspace/main_bin /app/bin/main
 
 # Tell the Flask app where to find the compiled calculator binary.
-ENV NUTRITION_BINARY=/app/bin/main
+ENV MACROS_BINARY=/app/bin/main
 ENV FLASK_DEBUG=0
 
 # Render sets $PORT at runtime; gunicorn binds to it.
