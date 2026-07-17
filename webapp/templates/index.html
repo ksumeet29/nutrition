@@ -12,71 +12,75 @@
     <p class="subtitle">Enter your physical metrics to get your BMR, TDEE and daily macros.</p>
 
     <form action="{{ url_for('result') }}" method="post" class="form-grid">
-      <label>
-        Weight (kg)
-        <input type="number" step="0.1" name="weight" value="" min="1" required>
-      </label>
+      <div class="field-group">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+          <label for="weight">Weight</label>
+          <div class="radio-group" role="radiogroup" aria-label="Weight unit">
+            <label class="radio-option"><input type="radio" name="weight_unit" value="kg" checked> kg</label>
+            <label class="radio-option"><input type="radio" name="weight_unit" value="lb"> lb</label>
+          </div>
+        </div>
+        <input id="weight" type="number" step="0.1" name="weight" value="" min="1" required placeholder="e.g. 70">
+      </div>
 
-      <label>
-        Height (cm)
-        <input type="number" step="0.1" name="height" value="" min="1" required>
-      </label>
+      <div class="field-group">
+        <label for="height" id="height-label">Height (cm)</label>
+        <div class="radio-group" role="radiogroup" aria-label="Height unit">
+          <label class="radio-option"><input type="radio" name="height_unit" value="cm" checked> cm</label>
+          <label class="radio-option"><input type="radio" name="height_unit" value="in"> in</label>
+        </div>
+        <input id="height" type="number" step="0.1" name="height" value="" min="1" required placeholder="e.g. 175">
+      </div>
 
-      <label>
-        Age
-        <input type="number" name="age" value="" min="1" required>
-      </label>
+      <div class="field-group">
+        <label for="age">Age</label>
+        <input id="age" type="number" name="age" value="" min="1" required placeholder="e.g. 25">
+      </div>
 
-      <label>
-        Sex
-        <select name="sex" required>
+      <div class="field-group">
+        <label for="sex">Sex</label>
+        <select id="sex" name="sex" required>
           <option value="" selected disabled>Select sex</option>
           <option value="1">Male</option>
           <option value="2">Female</option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        Body Fat (%)
-        <input type="number" step="0.1" name="bodyfat" value="" min="1" max="70" required>
-      </label>
+      <div class="field-group">
+        <label for="bodyfat">Body Fat (%)</label>
+        <input id="bodyfat" type="number" step="0.1" name="bodyfat" value="" min="1" max="70" required placeholder="e.g. 15">
+      </div>
 
-      <label>
-        Training Days / Week
-        <input type="number" name="trainingdays" value="" min="0" max="7" required>
-      </label>
+      <div class="field-group">
+        <label for="trainingdays">Training Days / Week</label>
+        <input id="trainingdays" type="number" name="trainingdays" value="" min="0" max="7" required placeholder="e.g. 3">
+      </div>
 
-      <label>
-        Goal
-        <select name="goal" id="goal-select" required>
+      <div class="field-group">
+        <label for="goal">Goal</label>
+        <select id="goal" name="goal" required>
           <option value="" selected disabled>Select goal</option>
           <option value="1">Fat Loss</option>
           <option value="2">Maintenance</option>
           <option value="3">Muscle Gain</option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        Activity Level
-        <select name="mul" required>
+      <div class="field-group">
+        <label for="mul">Activity Level</label>
+        <select id="mul" name="mul" required>
           <option value="" selected disabled>Select activity level</option>
-          <option value="1.2">Sedentary — little/no exercise (&times;1.2)</option>
-          <option value="1.375">Lightly Active — 1-3 days/week (&times;1.375)</option>
-          <option value="1.55">Moderately Active — 3-5 days/week (&times;1.55)</option>
-          <option value="1.725">Very Active — 6-7 days/week (&times;1.725)</option>
-          <option value="1.9">Extra Active — hard daily training/physical job (&times;1.9)</option>
+          <option value="1.2">Sedentary — little/no exercise</option>
+          <option value="1.375">Lightly Active — 1-3 days/week</option>
+          <option value="1.55">Moderately Active — 3-5 days/week</option>
+          <option value="1.725">Very Active — 6-7 days/week</option>
+          <option value="1.9">Extra Active — hard daily training/physical job</option>
         </select>
-      </label>
+      </div>
 
-      <div id="deficit-wrapper" style="display: none;">
-        <label>
-          Deficit
-          <select name="deficit">
-            <option value="" selected disabled>Select deficit</option>
-            <option value="1">Aggressive (500 kCal)</option>
-            <option value="2">Moderate (250 kCal)</option>
-          </select>
-        </label>
+      <div id="deficit-wrapper" class="field-group" style="display: none;">
+        <label for="deficit">Deficit (kcal)</label>
+        <input id="deficit" type="number" name="deficit" min="0" step="1" placeholder="e.g. 300">
       </div>
 
       <button type="submit" class="submit-btn">Calculate</button>
@@ -84,22 +88,40 @@
   </div>
 
   <script>
-    const goalSelect = document.getElementById('goal-select');
+    const goalSelect = document.getElementById('goal');
     const deficitWrapper = document.getElementById('deficit-wrapper');
+    const deficitInput = document.getElementById('deficit');
+    const weightLabel = document.getElementById('weight-label');
+    const heightLabel = document.getElementById('height-label');
+
+    function updateUnitLabels() {
+      const weightInputs = document.querySelectorAll('input[name="weight_unit"]');
+      const heightInputs = document.querySelectorAll('input[name="height_unit"]');
+      const weightUnit = Array.from(weightInputs).find((input) => input.checked)?.value || 'kg';
+      const heightUnit = Array.from(heightInputs).find((input) => input.checked)?.value || 'cm';
+      weightLabel.textContent = weightUnit === 'lb' ? 'Weight (lb)' : 'Weight (kg)';
+      heightLabel.textContent = heightUnit === 'in' ? 'Height (in)' : 'Height (cm)';
+    }
 
     function toggleDeficitField() {
       const show = goalSelect.value === '1';
       deficitWrapper.style.display = show ? 'block' : 'none';
+      deficitInput.required = show;
       if (!show) {
-        const deficitSelect = deficitWrapper.querySelector('select');
-        deficitSelect.value = '';
+        deficitInput.value = '';
       }
     }
+
+    document.querySelectorAll('input[name="weight_unit"], input[name="height_unit"]').forEach((input) => {
+      input.addEventListener('change', updateUnitLabels);
+    });
 
     if (goalSelect) {
       goalSelect.addEventListener('change', toggleDeficitField);
       toggleDeficitField();
     }
+
+    updateUnitLabels();
   </script>
 </body>
 </html>

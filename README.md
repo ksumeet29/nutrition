@@ -31,15 +31,15 @@ Or test the Docker image locally:
 
 ```bash
 # Build the image
-docker build -t nutrition-web .
+docker build -t macros-calc .
 
 # Run the container (open http://localhost:8080 afterwards)
-docker run -d --name nutrition-web -p 8080:8080 -e PORT=8080 nutrition-web
+docker run -d --name macros-calc -p 8080:8080 -e PORT=8080 macros-calc
 
 # Stop and remove the container
-docker stop nutrition-web
-docker rm nutrition-web
+docker stop macros-calc
+docker rm macros-calc
 
 # Delete the image
-docker rmi nutrition-web
+docker rmi macros-calc
 ```

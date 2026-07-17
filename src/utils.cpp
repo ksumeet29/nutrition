@@ -12,6 +12,10 @@ Goal parseGoal(int input) {
     }
 }
 
-Deficit parseDeficit(int input) {
-    return (input == 1) ? Deficit::Aggresive : Deficit::Moderate;
+TDEEMethod parseTDEEMethod(int input) {
+    switch (input) {
+        case 2: return TDEEMethod::Harris;
+        case 3: return TDEEMethod::Katch;
+        default: return TDEEMethod::Mifflin;
+    }
 }

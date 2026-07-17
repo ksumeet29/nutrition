@@ -8,3 +8,4 @@ double katchMcArdle(const UserInput& u);
 TDEEOutput calculateAllTDEE(const UserInput& u);
 
 double applyActivityMultiplier(double bmr, double multiplier);
+double calculateTDEE(const UserInput& u, const TDEEOutput& base, double multiplier);

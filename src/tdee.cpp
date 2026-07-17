@@ -32,3 +32,14 @@ TDEEOutput calculateAllTDEE(const UserInput& u) {
 double applyActivityMultiplier(double bmr, double multiplier) {
     return bmr * multiplier;
 }
+
+double calculateTDEE(const UserInput& u, const TDEEOutput& base, double multiplier) {
+    switch (u.tdeeMethod) {
+        case TDEEMethod::Harris:
+            return applyActivityMultiplier(base.harris, multiplier);
+        case TDEEMethod::Katch:
+            return applyActivityMultiplier(base.katch, multiplier);
+        default:
+            return applyActivityMultiplier(base.mifflin, multiplier);
+    }
+}

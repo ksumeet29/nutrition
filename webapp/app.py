@@ -23,7 +23,6 @@ MAIN_BINARY = os.environ.get(
 )
 
 GOAL_LABELS = {"1": "Fat Loss", "2": "Maintenance", "3": "Muscle Gain"}
-DEFICIT_LABELS = {"1": "Aggressive", "2": "Moderate"}
 SEX_LABELS = {"1": "Male", "2": "Female"}
 ACTIVITY_LABELS = {
     "1.2": "Sedentary (little/no exercise)",
@@ -31,6 +30,11 @@ ACTIVITY_LABELS = {
     "1.55": "Moderately Active (3-5 days/week)",
     "1.725": "Very Active (6-7 days/week)",
     "1.9": "Extra Active (hard daily training/physical job)",
+}
+TDEE_METHOD_LABELS = {
+    "1": "Mifflin-St Jeor",
+    "2": "Harris-Benedict",
+    "3": "Katch-McArdle",
 }
 
 
@@ -44,19 +48,45 @@ def ensure_binary_built():
         )
 
 
+def convert_inputs(form):
+    weight = float(form["weight"])
+    height = float(form["height"])
+    weight_unit = form.get("weight_unit", "kg")
+    height_unit = form.get("height_unit", "cm")
+
+    if isinstance(weight_unit, list):
+        weight_unit = weight_unit[0] if weight_unit else "kg"
+    if isinstance(height_unit, list):
+        height_unit = height_unit[0] if height_unit else "cm"
+
+    if weight_unit == "lb":
+        weight = weight * 0.45359237
+    if height_unit == "in":
+        height = height * 2.54
+
+    return weight, height
+
+
 def run_calculator(form):
     ensure_binary_built()
+    weight_kg, height_cm = convert_inputs(form)
+    deficit = form.get("deficit", "0") or "0"
+    tdee_method = form.get("tdee_method", "1") or "1"
+    sex_value = form.get("sex_value") or form.get("sex")
+    goal_value = form.get("goal_value") or form.get("goal")
+
     args = [
         MAIN_BINARY,
-        form["weight"],
-        form["height"],
+        str(weight_kg),
+        str(height_cm),
         form["age"],
-        form["sex"],
+        sex_value,
         form["bodyfat"],
         form["trainingdays"],
-        form["goal"],
+        goal_value,
         form["mul"],
-        form.get("deficit", "2"),
+        deficit,
+        tdee_method,
     ]
     proc = subprocess.run(args, capture_output=True, text=True, check=True)
     return json.loads(proc.stdout)
@@ -82,17 +112,32 @@ def result():
         error = str(exc)
 
     mul_value = request.form.get("mul")
+    weight_unit = request.form.get("weight_unit", "kg")
+    height_unit = request.form.get("height_unit", "cm")
+    if isinstance(weight_unit, list):
+        weight_unit = weight_unit[0] if weight_unit else "kg"
+    if isinstance(height_unit, list):
+        height_unit = height_unit[0] if height_unit else "cm"
+    tdee_method = request.form.get("tdee_method", "1")
+    sex_value = request.form.get("sex_value") or request.form.get("sex")
+    goal_value = request.form.get("goal_value") or request.form.get("goal")
     inputs = {
         "weight": request.form.get("weight"),
         "height": request.form.get("height"),
+        "weight_unit": weight_unit,
+        "height_unit": height_unit,
         "age": request.form.get("age"),
-        "sex": SEX_LABELS.get(request.form.get("sex"), "-"),
+        "sex": SEX_LABELS.get(sex_value, "-"),
+        "sex_value": sex_value,
         "bodyfat": request.form.get("bodyfat"),
         "trainingdays": request.form.get("trainingdays"),
-        "goal": GOAL_LABELS.get(request.form.get("goal"), "-"),
+        "goal": GOAL_LABELS.get(goal_value, "-"),
+        "goal_value": goal_value,
         "mul": mul_value,
         "mul_label": ACTIVITY_LABELS.get(mul_value, "Custom"),
-        "deficit": DEFICIT_LABELS.get(request.form.get("deficit"), "-"),
+        "deficit": request.form.get("deficit", "0"),
+        "tdee_method": tdee_method,
+        "tdee_method_label": TDEE_METHOD_LABELS.get(tdee_method, "Mifflin-St Jeor"),
     }
 
     return render_template("result.html", data=data, error=error, inputs=inputs)

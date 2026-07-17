@@ -7,9 +7,9 @@
 #include "models.hpp"
 
 int main(int argc, char* argv[]) {
-    // Expected arguments: weight_kg height_cm age sex(1/2) bodyfat training_days goal(1/2/3) activity_multiplier deficit(1/2)
-    if (argc != 10) {
-        std::cerr << "Usage: " << argv[0] << " weight_kg height_cm age sex bodyfat training_days goal activity_multiplier deficit\n";
+    // Expected arguments: weight_kg height_cm age sex(1/2) bodyfat training_days goal activity_multiplier deficit tdee_method(1/2/3)
+    if (argc != 11) {
+        std::cerr << "Usage: " << argv[0] << " weight_kg height_cm age sex bodyfat training_days goal activity_multiplier deficit tdee_method\n";
         return 1;
     }
 
@@ -22,10 +22,11 @@ int main(int argc, char* argv[]) {
     u.trainingDaysPerWeek = std::stoi(argv[6]);
     u.goal = parseGoal(std::stoi(argv[7]));
     double multiplier = std::stod(argv[8]);
-    u.deficit = parseDeficit(std::stoi(argv[9]));
+    u.deficitCalories = std::stoi(argv[9]);
+    u.tdeeMethod = parseTDEEMethod(std::stoi(argv[10]));
 
     TDEEOutput base = calculateAllTDEE(u);
-    double tdee = applyActivityMultiplier(base.mifflin, multiplier);
+    double tdee = calculateTDEE(u, base, multiplier);
     MacroOutput macros = calculateMacros(tdee, u);
 
     // Output JSON

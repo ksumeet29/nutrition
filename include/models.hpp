@@ -5,7 +5,7 @@ enum class Sex { Male, Female };
 
 enum class Goal { FatLoss, Maintenance, MuscleGain };
 
-enum class Deficit { Aggresive, Moderate};
+enum class TDEEMethod { Mifflin, Harris, Katch };
 
 struct UserInput {
     double weightKg;
@@ -15,7 +15,8 @@ struct UserInput {
     double bodyFatPercent;
     int trainingDaysPerWeek;
     Goal goal;
-    Deficit deficit;
+    int deficitCalories;
+    TDEEMethod tdeeMethod;
 };
 
 struct TDEEOutput {

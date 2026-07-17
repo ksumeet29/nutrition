@@ -2,4 +2,4 @@
 
 Sex parseSex(int input);
 Goal parseGoal(int input);
-Deficit parseDeficit(int input);
+TDEEMethod parseTDEEMethod(int input);

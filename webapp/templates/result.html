@@ -15,18 +15,43 @@
     {% else %}
       <h1>Your Results</h1>
 
-      <h2>Basal Metabolic Rate (BMR)</h2>
+      <form action="{{ url_for('result') }}" method="post" class="method-form">
+        <input type="hidden" name="weight" value="{{ inputs.weight }}">
+        <input type="hidden" name="height" value="{{ inputs.height }}">
+        <input type="hidden" name="weight_unit" value="{{ inputs.weight_unit }}">
+        <input type="hidden" name="height_unit" value="{{ inputs.height_unit }}">
+        <input type="hidden" name="age" value="{{ inputs.age }}">
+        <input type="hidden" name="sex" value="{{ inputs.sex_value }}">
+        <input type="hidden" name="sex_value" value="{{ inputs.sex_value }}">
+        <input type="hidden" name="bodyfat" value="{{ inputs.bodyfat }}">
+        <input type="hidden" name="trainingdays" value="{{ inputs.trainingdays }}">
+        <input type="hidden" name="goal" value="{{ inputs.goal_value }}">
+        <input type="hidden" name="goal_value" value="{{ inputs.goal_value }}">
+        <input type="hidden" name="mul" value="{{ inputs.mul }}">
+        <input type="hidden" name="deficit" value="{{ inputs.deficit }}">
+        <label class="method-select">
+          TDEE method <span class="info-icon" title="Total Daily Energy Expenditure (TDEE) is your maintenance calories after activity, and macros are then built around that target.">&#9432;</span>
+          <select name="tdee_method">
+            <option value="1" {% if inputs.tdee_method == '1' %}selected{% endif %}>Mifflin-St Jeor</option>
+            <option value="2" {% if inputs.tdee_method == '2' %}selected{% endif %}>Harris-Benedict</option>
+            <option value="3" {% if inputs.tdee_method == '3' %}selected{% endif %}>Katch-McArdle</option>
+          </select>
+        </label>
+        <button type="submit" class="submit-btn small">Recalculate</button>
+      </form>
+
+      <h2>Basal Metabolic Rate (BMR) <span class="info-icon" title="Basal Metabolic Rate (BMR) is the energy your body needs at complete rest.">&#9432;</span></h2>
       <div class="result-grid">
         <div class="result-item">
-          <span class="label">Mifflin-St Jeor</span>
+          <span class="label">Mifflin-St Jeor </span>
           <span class="value">{{ data.mifflin }} kcal</span>
         </div>
         <div class="result-item">
-          <span class="label">Harris-Benedict</span>
+          <span class="label">Harris-Benedict </span>
           <span class="value">{{ data.harris }} kcal</span>
         </div>
         <div class="result-item">
-          <span class="label">Katch-McArdle</span>
+          <span class="label">Katch-McArdle </span>
           <span class="value">{{ data.katch }} kcal</span>
         </div>
       </div>
@@ -34,7 +59,7 @@
       <h2>Daily Energy &amp; Macros</h2>
       <div class="result-grid">
         <div class="result-item highlight">
-          <span class="label">TDEE</span>
+          <span class="label">TDEE </span>
           <span class="value">{{ data.tdee }} kcal</span>
         </div>
         <div class="result-item highlight">
@@ -62,7 +87,16 @@
         </div>
       </div>
 
-      <a class="back-link" href="{{ url_for('index') }}">&larr; Recalculate</a>
+      <div class="info-box">
+        <h3>How the TDEE methods differ</h3>
+        <ul>
+          <li><strong>Mifflin-St Jeor</strong> is a widely used estimate for BMR and is a strong default for most people.</li>
+          <li><strong>Harris-Benedict</strong> is a classic formula that can give a slightly different result depending on your physical profile.</li>
+          <li><strong>Katch-McArdle</strong> uses lean body mass and can be more accurate when body fat is known.</li>
+        </ul>
+      </div>
+
+      <a class="back-link" href="{{ url_for('index') }}">&larr; Start over</a>
     {% endif %}
   </div>
 </body>
