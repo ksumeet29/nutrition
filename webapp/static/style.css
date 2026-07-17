@@ -299,3 +299,57 @@ input:focus, select:focus {
     grid-template-columns: 1fr;
   }
 }
+
+.method-select select {
+  background: var(--surface, #1c2128);
+  border: 1px solid var(--border, #2d333b);
+  border-radius: 8px;
+  color: var(--text, #cdd9e5);
+  font-size: 14px;
+  padding: 8px 12px;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.method-select select:focus {
+  border-color: var(--accent, #5bf5a2);
+}
+
+.info-box {
+  background: var(--surface, #1c2128);
+  border: 1px solid var(--border, #2d333b);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.info-box h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted, #768390);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+}
+
+.info-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-box ul li {
+  font-size: 13px;
+  color: var(--muted, #768390);
+  padding-left: 12px;
+  border-left: 2px solid var(--accent, #5bf5a2);
+  line-height: 1.5;
+}
+
+.info-box ul li strong {
+  color: var(--text, #cdd9e5);
+}
