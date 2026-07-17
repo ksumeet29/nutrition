@@ -1,5 +1,5 @@
-# nutrition
-Macros Calulator. Calculates Basal Metabollic Rate (BMR), Total Daily Energy Expenditure (TDEE), and Macros based on 3 accepted methods
+# Macros Calculator
+Calculates Basal Metabollic Rate (BMR), Total Daily Energy Expenditure (TDEE), and Macros based on 3 accepted methods
 1. Mifflin-St Jeor
 2. Harris-Benedict
 3. Katch-McArdle
