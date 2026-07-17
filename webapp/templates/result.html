@@ -29,14 +29,17 @@
         <input type="hidden" name="goal_value" value="{{ inputs.goal_value }}">
         <input type="hidden" name="mul" value="{{ inputs.mul }}">
         <input type="hidden" name="deficit" value="{{ inputs.deficit }}">
-        <label class="method-select">
-          TDEE method <span class="info-icon" title="Total Daily Energy Expenditure (TDEE) is your maintenance calories after activity, and macros are then built around that target.">&#9432;</span>
-          <select name="tdee_method">
-            <option value="1" {% if inputs.tdee_method == '1' %}selected{% endif %}>Mifflin-St Jeor</option>
-            <option value="2" {% if inputs.tdee_method == '2' %}selected{% endif %}>Harris-Benedict</option>
-            <option value="3" {% if inputs.tdee_method == '3' %}selected{% endif %}>Katch-McArdle</option>
-          </select>
-        </label>
+          <label class="method-select">
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+              TDEE method
+              <span class="info-icon" title="Total Daily Energy Expenditure (TDEE) is your maintenance calories after activity, and macros are then built around that target.">&#9432;</span>
+            </div>
+            <select name="tdee_method">
+              <option value="1" {% if inputs.tdee_method == '1' %}selected{% endif %}>Mifflin-St Jeor</option>
+              <option value="2" {% if inputs.tdee_method == '2' %}selected{% endif %}>Harris-Benedict</option>
+              <option value="3" {% if inputs.tdee_method == '3' %}selected{% endif %}>Katch-McArdle</option>
+            </select>
+          </label>
         <button type="submit" class="submit-btn small">Recalculate</button>
       </form>
 

@@ -13,18 +13,19 @@
 
     <form action="{{ url_for('result') }}" method="post" class="form-grid">
       <div class="field-group">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
-          <label for="weight">Weight</label>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <label for="weight" style="min-width:80px; margin:0;">Weight</label>
           <div class="radio-group" role="radiogroup" aria-label="Weight unit">
             <label class="radio-option"><input type="radio" name="weight_unit" value="kg" checked> kg</label>
-            <label class="radio-option"><input type="radio" name="weight_unit" value="lb"> lb</label>
+            <label class="radio-option"><input type="radio" name="weight_unit" value="lb"> lbs</label>
           </div>
         </div>
-        <input id="weight" type="number" step="0.1" name="weight" value="" min="1" required placeholder="e.g. 70">
+        <input id="weight" type="number" step="0.1" name="weight" value="" min="1" required placeholder="e.g. 70" style="margin-top:8px;">
       </div>
 
       <div class="field-group">
-        <label for="height" id="height-label">Height (cm)</label>
+        <div style="display:flex; align-items:center; gap:16px;">
+        <label for="height" style="min-width:80px; margin:0;">Height</label>
         <div class="radio-group" role="radiogroup" aria-label="Height unit">
           <label class="radio-option"><input type="radio" name="height_unit" value="cm" checked> cm</label>
           <label class="radio-option"><input type="radio" name="height_unit" value="in"> in</label>
