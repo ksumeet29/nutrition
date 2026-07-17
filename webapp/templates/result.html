@@ -29,7 +29,6 @@
         <input type="hidden" name="goal_value" value="{{ inputs.goal_value }}">
         <input type="hidden" name="mul" value="{{ inputs.mul }}">
         <input type="hidden" name="deficit" value="{{ inputs.deficit }}">
-        <div class="result-item highlight" style="margin-bottom:12px;">
           <label class="method-select">
             <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
               TDEE method
@@ -41,22 +40,21 @@
               <option value="3" {% if inputs.tdee_method == '3' %}selected{% endif %}>Katch-McArdle</option>
             </select>
           </label>
-        </div>
         <button type="submit" class="submit-btn small">Recalculate</button>
       </form>
 
       <h2>Basal Metabolic Rate (BMR) <span class="info-icon" title="Basal Metabolic Rate (BMR) is the energy your body needs at complete rest.">&#9432;</span></h2>
       <div class="result-grid">
         <div class="result-item">
-          <span class="label">Mifflin-St Jeor</span>
+          <span class="label">Mifflin-St Jeor </span>
           <span class="value">{{ data.mifflin }} kcal</span>
         </div>
         <div class="result-item">
-          <span class="label">Harris-Benedict</span>
+          <span class="label">Harris-Benedict </span>
           <span class="value">{{ data.harris }} kcal</span>
         </div>
         <div class="result-item">
-          <span class="label">Katch-McArdle</span>
+          <span class="label">Katch-McArdle </span>
           <span class="value">{{ data.katch }} kcal</span>
         </div>
       </div>
